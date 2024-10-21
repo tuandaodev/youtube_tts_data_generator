@@ -624,6 +624,9 @@ class YTSpeechDataGenerator(object):
             filtered_df = df[df["length"] <= max_limit]
             long_audios = df[df["length"] > max_limit]
 
+            tqdm.write(f"Found {filtered_df.shape[0]} audios shorter than {max_limit} seconds.")
+            tqdm.write(f"Found {long_audios.shape[0]} audios longer than {max_limit} seconds.")
+
             name_ix = 0
             tqdm.write(f"Processing audios shorter than {max_limit} seconds..")
             for ix in tqdm(range(0, filtered_df.shape[0], 2)):
@@ -654,6 +657,7 @@ class YTSpeechDataGenerator(object):
                     with open(
                         os.path.join(self.concat_dir, new_name + ".txt"), "w"
                     ) as f:
+                        tqdm.write(f"Writing short transcription for {new_name} | ix: {ix} - name_ix {name_ix}.")
                         f.write(text)
                     name_ix += 1
                 except IndexError:
@@ -670,6 +674,7 @@ class YTSpeechDataGenerator(object):
                         os.path.join(self.concat_dir, new_name + ".txt"), "w"
                     ) as f:
                         f.write(text)
+                        tqdm.write(f"Writing short transcription IndexError for {new_name} | ix: {ix} - name_ix {name_ix}.")
                     name_ix += 1
 
             tqdm.write(f"Processing audios longer than {max_limit} seconds..")
@@ -686,6 +691,7 @@ class YTSpeechDataGenerator(object):
                     os.path.join(self.concat_dir, new_name + ".wav"), format="wav"
                 )
                 with open(os.path.join(self.concat_dir, new_name + ".txt"), "w") as f:
+                    tqdm.write(f"Writing long transcription for {new_name} | ix: {ix} - name_ix {name_ix}.")
                     f.write(text)
                 name_ix += 1
 
