@@ -757,7 +757,7 @@ class YTSpeechDataGenerator(object):
             ):
 
                 txt_file_name = audio.replace(".wav", ".txt")
-                with open(os.path.join(self.concat_dir, f"{txt_file_name}.txt")) as f:
+                with open(os.path.join(self.concat_dir, txt_file_name)) as f:
                     text = f.read().strip()
                     if (self.contains_text_in_brackets(text)):
                         tqdm.write(f"Skipping {audio} as it contains background audio in {txt_file_name}.")
@@ -781,8 +781,7 @@ class YTSpeechDataGenerator(object):
                 
                 filtered_audios.append(audio)
                 filtered_txts.append(audio.replace(".wav", ".txt"))
-
-                tqdm.write(f"Process {audio} to {trimmed_length} seconds.")
+                # tqdm.write(f"Process {audio} to {trimmed_length} seconds.")
             else:
                 tqdm.write(f"Skipping {audio} as it's length is {trimmed_length} seconds.")
 
