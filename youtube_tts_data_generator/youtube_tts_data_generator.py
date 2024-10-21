@@ -621,8 +621,8 @@ class YTSpeechDataGenerator(object):
         ):
             tqdm.write(f"Reading audio data from 'split.csv'.")
             df = pd.read_csv(self.split_audios_csv, sep="|")
-            filtered_df = df[df["length"] <= 7]
-            long_audios = df[df["length"] > 7]
+            filtered_df = df[df["length"] <= max_limit]
+            long_audios = df[df["length"] > max_limit]
 
             name_ix = 0
             tqdm.write(f"Processing audios shorter than {max_limit} seconds..")
