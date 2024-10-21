@@ -347,6 +347,11 @@ class YTSpeechDataGenerator(object):
                                     f"WARNING - video {link} does not have subtitles. Skipping..",
                                     NoSubtitleWarning,
                                 )
+                            except Exception as e:
+                                warnings.warn(
+                                    f"WARNING - video {link} has an error. Skipping..",
+                                    NoSubtitleWarning,
+                                )
                         for root, dirs, fns in os.walk(self.download_dir):
                             for fn in fns:
                                 if wav_file and ".mp4" in fn:
