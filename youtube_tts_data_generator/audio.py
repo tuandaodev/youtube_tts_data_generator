@@ -5,6 +5,7 @@ from warnings import warn
 import numpy as np
 import librosa
 import struct
+np.bool = np.bool_
 
 try:
     import webrtcvad
