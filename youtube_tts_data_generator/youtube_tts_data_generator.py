@@ -349,7 +349,10 @@ class YTSpeechDataGenerator(object):
                         for root, dirs, fns in os.walk(self.download_dir):
                             for fn in fns:
                                 if wav_file and ".mp4" in fn:
-                                    os.replace(self.download_dir + "\\" + filename + ".wav", self.download_dir + "\\" + wav_file)
+                                    # os.replace(self.download_dir + "\\" + filename + ".wav", self.download_dir + "\\" + wav_file)
+                                    old_path = os.path.join(self.download_dir, filename + ".wav")
+                                    new_path = os.path.join(self.download_dir, wav_file)
+                                    os.replace(old_path, new_path)
                         del self.ydl_opts["outtmpl"]
                     else:
                         warnings.warn(
