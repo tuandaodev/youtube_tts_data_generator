@@ -658,7 +658,7 @@ class YTSpeechDataGenerator(object):
                     with open(
                         os.path.join(self.concat_dir, new_name + ".txt"), "w"
                     ) as f:
-                        tqdm.write(f"Writing short transcription for {new_name} | ix: {ix} - name_ix {name_ix}.")
+                        # tqdm.write(f"Writing short transcription for {new_name} | ix: {ix} - name_ix {name_ix}.")
                         f.write(text)
                     name_ix += 1
                 except IndexError:
@@ -675,7 +675,7 @@ class YTSpeechDataGenerator(object):
                         os.path.join(self.concat_dir, new_name + ".txt"), "w"
                     ) as f:
                         f.write(text)
-                        tqdm.write(f"Writing short transcription IndexError for {new_name} | ix: {ix} - name_ix {name_ix}.")
+                        # tqdm.write(f"Writing short transcription IndexError for {new_name} | ix: {ix} - name_ix {name_ix}.")
                     name_ix += 1
 
             tqdm.write(f"Processing audios longer than {max_limit} seconds..")
@@ -760,7 +760,7 @@ class YTSpeechDataGenerator(object):
                 with open(os.path.join(self.concat_dir, txt_file_name)) as f:
                     text = f.read().strip()
                     if (self.contains_text_in_brackets(text)):
-                        tqdm.write(f"Skipping {audio} as it contains background audio in {txt_file_name}.")
+                        # tqdm.write(f"Skipping {audio} as it contains background audio in {txt_file_name}.")
                         continue
 
                 self.len_dataset += trimmed_length
@@ -783,7 +783,7 @@ class YTSpeechDataGenerator(object):
                 filtered_txts.append(audio.replace(".wav", ".txt"))
                 # tqdm.write(f"Process {audio} to {trimmed_length} seconds.")
             else:
-                tqdm.write(f"Skipping {audio} as it's length is {trimmed_length} seconds.")
+                # tqdm.write(f"Skipping {audio} as it's length is {trimmed_length} seconds.")
 
         self.len_shortest_audio = min(audio_lens)
         self.len_longest_audio = max(audio_lens)
