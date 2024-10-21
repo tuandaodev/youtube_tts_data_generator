@@ -211,6 +211,7 @@ class YTSpeechDataGenerator(object):
         self.len_longest_audio = 0
         self.keep_audio_extension = keep_audio_extension
         self.sr = sr
+        self.ignore_text_pattern = r"\[.*?\]"
         if output_type not in ["csv", "json"]:
             raise Exception(
                 "Invalid output type. Supported output files are 'csv'/'json'"
@@ -717,9 +718,8 @@ class YTSpeechDataGenerator(object):
         )
         return int(self.len_dataset)
     
-    def contains_text_in_brackets(text):
-        pattern = r"\[.*?\]"
-        match = re.search(pattern, text)
+    def contains_text_in_brackets(self, text):
+        match = re.search(self.ignore_text_pattern, text)
         return bool(match)
 
     def finalize_dataset(self, min_audio_length=5, max_audio_length=14):
