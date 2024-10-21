@@ -302,68 +302,74 @@ class YTSpeechDataGenerator(object):
 
             if os.path.getsize(self.text_path) > 0:
                 for ix in range(len(links)):
-                    link = links[ix]
-                    video_id = self.get_video_id(link)
-                    if video_id != []:
-                        filename = f"{self.name}{ix+1}.mp4"
-                        wav_file = filename.replace(".mp4", ".wav")
-                        self.ydl_opts["outtmpl"] = os.path.join(
-                            self.download_dir, filename
-                        )
-                        with yt_dlp.YoutubeDL(self.ydl_opts) as ydl:
-                            try:
-                                trans = (
-                                    YouTubeTranscriptApi.list_transcripts(video_id)
-                                    .find_transcript([self.dataset_lang])
-                                    .fetch()
-                                )
-                                trans = self.fix_json_trans(trans)
-                                json_formatted = (
-                                    self.transcript_formatter.format_transcript(
-                                        trans, ensure_ascii=False, indent=2
+                    try:
+                        link = links[ix]
+                        video_id = self.get_video_id(link)
+                        if video_id != []:
+                            filename = f"{self.name}{ix+1}.mp4"
+                            wav_file = filename.replace(".mp4", ".wav")
+                            self.ydl_opts["outtmpl"] = os.path.join(
+                                self.download_dir, filename
+                            )
+                            with yt_dlp.YoutubeDL(self.ydl_opts) as ydl:
+                                try:
+                                    trans = (
+                                        YouTubeTranscriptApi.list_transcripts(video_id)
+                                        .find_transcript([self.dataset_lang])
+                                        .fetch()
                                     )
-                                )
-                                open(
-                                    os.path.join(
-                                        self.download_dir,
-                                        wav_file.replace(
-                                            ".wav", f".{self.dataset_lang}.json"
+                                    trans = self.fix_json_trans(trans)
+                                    json_formatted = (
+                                        self.transcript_formatter.format_transcript(
+                                            trans, ensure_ascii=False, indent=2
+                                        )
+                                    )
+                                    open(
+                                        os.path.join(
+                                            self.download_dir,
+                                            wav_file.replace(
+                                                ".wav", f".{self.dataset_lang}.json"
+                                            ),
                                         ),
-                                    ),
-                                    "w",
-                                    encoding="utf-8",
-                                ).write(json_formatted)
-                                ydl.download([link])
-                                print(
-                                    "Completed downloading "
-                                    + wav_file
-                                    + " from "
-                                    + link
-                                )
-                                self.wav_counter += 1
-                                self.wav_filenames.append(wav_file)
-                            except (TranscriptsDisabled, NoTranscriptFound):
-                                warnings.warn(
-                                    f"WARNING - video {link} does not have subtitles. Skipping..",
-                                    NoSubtitleWarning,
-                                )
-                            except Exception as e:
-                                warnings.warn(
-                                    f"WARNING - video {link} has an error. Skipping..",
-                                    NoSubtitleWarning,
-                                )
-                        for root, dirs, fns in os.walk(self.download_dir):
-                            for fn in fns:
-                                if wav_file and ".mp4" in fn:
-                                    # os.replace(self.download_dir + "\\" + filename + ".wav", self.download_dir + "\\" + wav_file)
-                                    old_path = os.path.join(self.download_dir, filename + ".wav")
-                                    new_path = os.path.join(self.download_dir, wav_file)
-                                    os.replace(old_path, new_path)
-                        del self.ydl_opts["outtmpl"]
-                    else:
+                                        "w",
+                                        encoding="utf-8",
+                                    ).write(json_formatted)
+                                    ydl.download([link])
+                                    print(
+                                        "Completed downloading "
+                                        + wav_file
+                                        + " from "
+                                        + link
+                                    )
+                                    self.wav_counter += 1
+                                    self.wav_filenames.append(wav_file)
+                                except (TranscriptsDisabled, NoTranscriptFound):
+                                    warnings.warn(
+                                        f"WARNING - video {link} does not have subtitles. Skipping..",
+                                        NoSubtitleWarning,
+                                    )
+                                except:
+                                    warnings.warn(
+                                        f"WARNING - video {link} error 1. Skipping..",
+                                        NoSubtitleWarning,
+                                    )
+                            for root, dirs, fns in os.walk(self.download_dir):
+                                for fn in fns:
+                                    if wav_file and ".mp4" in fn:
+                                        # os.replace(self.download_dir + "\\" + filename + ".wav", self.download_dir + "\\" + wav_file)
+                                        old_path = os.path.join(self.download_dir, filename + ".wav")
+                                        new_path = os.path.join(self.download_dir, wav_file)
+                                        os.replace(old_path, new_path)
+                            del self.ydl_opts["outtmpl"]
+                        else:
+                            warnings.warn(
+                                f"WARNING - video {link} does not seem to be a valid YouTube url. Skipping..",
+                                NoSubtitleWarning,
+                            )
+                    except:
                         warnings.warn(
-                            f"WARNING - video {link} does not seem to be a valid YouTube url. Skipping..",
-                            InvalidURLWarning,
+                            f"WARNING - video {link} error 2. Skipping..",
+                            NoSubtitleWarning,
                         )
                 if self.wav_filenames != []:
                     with open(self.filenames_txt, "w", encoding="utf-8") as f:
