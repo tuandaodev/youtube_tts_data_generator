@@ -5,7 +5,7 @@ with open("README.md", "r") as f:
 
 setup(
     name="youtube_tts_data_generator",
-    version="0.2.2",
+    version="0.2.1",
     description="A python library that generates speech data with transcriptions by collecting data from YouTube.",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -24,7 +24,7 @@ setup(
         "scipy>=1.0.0",
         "numba>=0.48",
         "inflect",
-        "numpy==1.23.1",
+        "numpy==1.14.0",
         "unidecode>=0.4.20",
         "vtt_to_srt3==0.1.8.9",
         "youtube-transcript-api>=0.4.1"
