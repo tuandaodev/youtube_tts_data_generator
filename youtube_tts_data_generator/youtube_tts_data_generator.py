@@ -760,7 +760,7 @@ class YTSpeechDataGenerator(object):
                 with open(os.path.join(self.concat_dir, f"{txt_file_name}.txt")) as f:
                     text = f.read().strip()
                     if (self.contains_text_in_brackets(text)):
-                        tqdm.write(f"Skipping {audio} as it contains background audio.")
+                        tqdm.write(f"Skipping {audio} as it contains background audio in {txt_file_name}.")
                         continue
 
                 self.len_dataset += trimmed_length
