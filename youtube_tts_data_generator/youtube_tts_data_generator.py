@@ -769,6 +769,10 @@ class YTSpeechDataGenerator(object):
                 filtered_audios.append(audio)
                 filtered_txts.append(audio.replace(".wav", ".txt"))
 
+                tqdm.write(f"Process {audio} to {trimmed_length} seconds.")
+            else:
+                tqdm.write(f"Skipping {audio} as it's length is {trimmed_length} seconds.")
+
         self.len_shortest_audio = min(audio_lens)
         self.len_longest_audio = max(audio_lens)
 
