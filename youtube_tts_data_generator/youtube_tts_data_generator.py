@@ -716,6 +716,11 @@ class YTSpeechDataGenerator(object):
             f"Collected {round(self.len_dataset/3600, 2)}hours ({int(self.len_dataset)} seconds) of audio."
         )
         return int(self.len_dataset)
+    
+    def contains_text_in_brackets(text):
+        pattern = r"\[.*?\]"
+        match = re.search(pattern, text)
+        return bool(match)
 
     def finalize_dataset(self, min_audio_length=5, max_audio_length=14):
         """
@@ -750,6 +755,14 @@ class YTSpeechDataGenerator(object):
                 trimmed_length >= min_audio_length
                 and trimmed_length <= max_audio_length
             ):
+
+                txt_file_name = audio.replace(".wav", ".txt")
+                with open(os.path.join(self.concat_dir, f"{txt_file_name}.txt")) as f:
+                    text = f.read().strip()
+                    if (self.contains_text_in_brackets(text)):
+                        tqdm.write(f"Skipping {audio} as it contains background audio.")
+                        continue
+
                 self.len_dataset += trimmed_length
                 """
                 librosa.output.write_wav(
